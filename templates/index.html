@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture-Controlled Media Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gesture-Controlled Media Player</h1>
+        </header>
+        
+        <main>
+            <div class="video-container">
+                <h2>Camera Feed</h2>
+                <div class="video-wrapper">
+                    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+                </div>
+            </div>
+            
+            <div class="controls-container">
+                <div class="playback-info">
+                    <h2>Playback Status</h2>
+                    <div class="status">
+                        <div class="status-indicator" id="status-indicator"></div>
+                        <div class="status-text" id="status-text">Stopped</div>
+                    </div>
+                    <div class="song-info" id="song-info">No song playing</div>
+                </div>
+                
+                <div class="manual-controls">
+                    <h2>Manual Controls</h2>
+                    <div class="control-buttons">
+                        <button id="prev-btn" title="Previous" onclick="controlPlayer('previous')">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button id="play-btn" title="Play" onclick="controlPlayer('play')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button id="pause-btn" title="Pause" onclick="controlPlayer('pause')">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button id="stop-btn" title="Stop" onclick="controlPlayer('stop')">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button id="next-btn" title="Next" onclick="controlPlayer('next')">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="gesture-info">
+                    <h2>Detected Gesture</h2>
+                    <div class="current-gesture" id="current-gesture">None</div>
+                </div>
+                
+                <div class="gesture-guide">
+                    <h2>Gesture Guide</h2>
+                    <ul>
+                        <li><span class="gesture-name">Open Palm (all fingers up):</span> Play/Resume</li>
+                        <li><span class="gesture-name">Closed Fist (all fingers down):</span> Pause</li>
+                        <li><span class="gesture-name">Palm Down (3+ fingers extended):</span> Stop</li>
+                        <li><span class="gesture-name">Peace Sign (index & middle up):</span> Next Song</li>
+                        <li><span class="gesture-name">Index Finger Only:</span> Previous Song</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Gesture-Controlled Media Player © 2025</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+        

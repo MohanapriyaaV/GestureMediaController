@@ -1,0 +1,190 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #333;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 32px;
+    color: #4fc3f7;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 22px;
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    font-weight: 500;
+    border-left: 4px solid #4fc3f7;
+    padding-left: 10px;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.video-container {
+    flex: 1 1 600px;
+}
+
+.video-wrapper {
+    margin-top: 15px;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.video-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.controls-container {
+    flex: 1 1 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.playback-info, .manual-controls, .gesture-info, .gesture-guide {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.status-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #f44336;
+    margin-right: 10px;
+}
+
+.status-indicator.playing {
+    background-color: #4caf50;
+}
+
+.status-indicator.paused {
+    background-color: #ff9800;
+}
+
+.status-text {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.song-info {
+    font-size: 16px;
+    color: #90caf9;
+    font-style: italic;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background-color: #3a3a3a;
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #4fc3f7;
+    transform: scale(1.05);
+}
+
+#play-btn {
+    background-color: #4caf50;
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+}
+
+#pause-btn, #stop-btn {
+    background-color: #ff9800;
+}
+
+.current-gesture {
+    font-size: 24px;
+    font-weight: 500;
+    color: #ffab40;
+    padding: 10px 0;
+    text-transform: capitalize;
+}
+
+.gesture-guide ul {
+    list-style-type: none;
+}
+
+.gesture-guide li {
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.gesture-name {
+    color: #ffab40;
+    font-weight: 500;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #777;
+}
+
+@media (max-width: 960px) {
+    main {
+        flex-direction: column;
+    }
+    
+    .video-container, .controls-container {
+        flex: 1 1 100%;
+    }
+}
+        
