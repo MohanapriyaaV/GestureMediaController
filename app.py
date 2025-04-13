@@ -234,6 +234,10 @@ if option == "📷 Single Image":
 elif option == "🎦 Webcam Live Feed":
     st.header("Live Webcam Gesture Detection")
     
+    # Initialize webcam state
+    if 'webcam_active' not in st.session_state:
+        st.session_state.webcam_active = False
+    
     # Display player status
     status_placeholder = st.empty()
     status_placeholder.markdown(
@@ -250,63 +254,83 @@ elif option == "🎦 Webcam Live Feed":
     # Current action display
     action_placeholder = st.empty()
     
-    # Current frame display
+    # Frame placeholder
     frame_placeholder = st.empty()
     
     # Remind about VLC window
     st.warning("Make sure VLC is the active window while controlling with gestures")
+
+    # Start/Stop buttons
+    col1, col2 = st.columns(2)
+    with col1:
+        if not st.session_state.webcam_active:
+            if st.button("▶️ Start Webcam", type="primary", use_container_width=True):
+                st.session_state.webcam_active = True
+                st.rerun()
+    with col2:
+        if st.session_state.webcam_active:
+            if st.button("⏹️ Stop Webcam", type="secondary", use_container_width=True):
+                st.session_state.webcam_active = False
+                st.rerun()
     
-    if st.button("Start Webcam Control"):
+    # Webcam processing when active
+    if st.session_state.webcam_active:
         cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        cap.set(cv2.CAP_PROP_FPS, 30)
         
-        # Add a stop button
-        stop_button_col = st.empty()
-        stop_pressed = stop_button_col.button("Stop Webcam")
-        
-        while not stop_pressed:
-            ret, frame = cap.read()
-            if not ret:
-                st.error("Failed to access webcam")
-                break
-            
-            # Process frame to detect hands
-            annotated_frame, landmarks = detect_hands_in_image(frame)
-            
-            # Get action from landmarks
-            action = None
-            if landmarks:
-                action = map_gesture_to_action(landmarks)
+        try:
+            while st.session_state.webcam_active:
+                ret, frame = cap.read()
+                if not ret:
+                    st.error("Failed to capture frame from webcam")
+                    break
                 
-                # Apply the action to media player automatically
-                if action and perform_media_action(action):
-                    # Update status
-                    status_placeholder.markdown(
-                        f"""<div class="status-box {'playing' if st.session_state.player_state == 'playing' else 'paused' if st.session_state.player_state == 'paused' else 'stopped'}">
-                        {'▶️ PLAYING' if st.session_state.player_state == 'playing' else '⏸️ PAUSED' if st.session_state.player_state == 'paused' else '⏹️ STOPPED'}</div>""", 
-                        unsafe_allow_html=True
-                    )
+                # Flip frame for mirror effect (like selfie camera)
+                frame = cv2.flip(frame, 1)
+                
+                # Process frame to detect hands
+                annotated_frame, landmarks = detect_hands_in_image(frame)
+                
+                # Get action from landmarks
+                action = None
+                if landmarks:
+                    action = map_gesture_to_action(landmarks)
                     
-                    # Update song display if needed
-                    if st.session_state.current_song:
-                        song_placeholder.markdown(f"**Current Song:** {st.session_state.current_song}")
-            
-            # Show action text
-            if action:
-                action_placeholder.markdown(f"<h3>Detected: {action.upper()}</h3>", unsafe_allow_html=True)
-            else:
-                action_placeholder.markdown("<h3>No gesture detected</h3>", unsafe_allow_html=True)
-            
-            # Display the frame
-            frame_placeholder.image(annotated_frame, channels="BGR", caption="Live Webcam Feed")
-            
-            # Check if stop button was pressed
-            stop_pressed = stop_button_col.button("Stop Webcam")
-            
-            # Slight delay
-            time.sleep(0.1)
-        
-        # Release the webcam
-        cap.release()
+                    # Apply the action to media player automatically
+                    if action and perform_media_action(action):
+                        # Update status
+                        status_placeholder.markdown(
+                            f"""<div class="status-box {'playing' if st.session_state.player_state == 'playing' else 'paused' if st.session_state.player_state == 'paused' else 'stopped'}">
+                            {'▶️ PLAYING' if st.session_state.player_state == 'playing' else '⏸️ PAUSED' if st.session_state.player_state == 'paused' else '⏹️ STOPPED'}</div>""", 
+                            unsafe_allow_html=True
+                        )
+                        
+                        # Update song display if needed
+                        if st.session_state.current_song:
+                            song_placeholder.markdown(f"**Current Song:** {st.session_state.current_song}")
+                
+                # Show action text
+                if action:
+                    action_placeholder.markdown(f"<h3>Detected: {action.upper()}</h3>", unsafe_allow_html=True)
+                else:
+                    action_placeholder.markdown("<h3>No gesture detected</h3>", unsafe_allow_html=True)
+                
+                # Display the frame (like mobile camera preview)
+                frame_placeholder.image(annotated_frame, channels="BGR", caption="Live Webcam Feed")
+                
+                # Small delay for smooth video
+                time.sleep(0.03)  # ~30 FPS
+                
+                # Check if we should still be active
+                if not st.session_state.webcam_active:
+                    break
+                    
+        finally:
+            cap.release()
+            frame_placeholder.empty()  # Clear the frame when stopped
+            action_placeholder.empty()  # Clear the action text
 
 # ========== Video File Mode ==========
 elif option == "🎬 Video File":
